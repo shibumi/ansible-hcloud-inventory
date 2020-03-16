@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
+	"strings"
 
 	"github.com/adrg/xdg"
 	"github.com/hetznercloud/hcloud-go/hcloud"
@@ -15,7 +17,8 @@ import (
 // configuration just holds a Token at the moment.
 // TODO: Gain token via any command. For example: `gopass api/hcloud`
 type configuration struct {
-	Token string `json:"token"`
+	Command string `json:"command"`
+	Token   string `json:"token"`
 }
 
 // inventory is holding the format as specified in:
@@ -113,7 +116,16 @@ func main() {
 		if err = json.Unmarshal(file, &config); err != nil {
 			log.Fatalln(err)
 		}
-		token = config.Token
+		if config.Command != "" {
+			command := strings.Fields(config.Command)
+			if out, err := exec.Command(command[0], command[1:]...).Output(); err != nil {
+				log.Fatalln(err)
+			} else {
+				token = string(out)
+			}
+		} else {
+			token = config.Token
+		}
 	}
 
 	// TODO: better flag handling

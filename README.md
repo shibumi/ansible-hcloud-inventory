@@ -16,5 +16,3 @@ A hcloud inventory for Ansible written in Go
 ### https://github.com/hg8496/ansible-hcloud-inventory
 
 * hg8496/ansible-hcloud inventory is written in Python
-* It has better grouping than this project
-* It has more host variables than this project
