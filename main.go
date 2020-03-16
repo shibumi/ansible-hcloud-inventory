@@ -24,6 +24,12 @@ type inventory struct {
 	Meta struct {
 		HostVars map[string]map[string]interface{} `json:"hostvars"`
 	} `json:"_meta"`
+	All struct {
+		Children []string `json:"children"`
+	} `json:"all"`
+	Ungrouped struct {
+		Hosts []string `json:"hosts"`
+	}
 }
 
 // printHelp just prints a formatted help.
@@ -47,6 +53,8 @@ func (inv *inventory) list(token string) {
 		for k, v := range server.Labels {
 			inv.Meta.HostVars[hostName][k] = v
 		}
+		inv.All.Children = append(inv.All.Children, "ungrouped")
+		inv.Ungrouped.Hosts = append(inv.Ungrouped.Hosts, hostName)
 	}
 	output, err := json.MarshalIndent(inv, "", "    ")
 	if err != nil {
