@@ -12,10 +12,21 @@ import (
 	"github.com/hetznercloud/hcloud-go/hcloud"
 )
 
+// configuration just holds a Token at the moment.
+// TODO: Gain token via any command. For example: `gopass api/hcloud`
 type configuration struct {
 	Token string `json:"token"`
 }
 
+// inventory is holding the format as specified in:
+// https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html#id16
+type inventory struct {
+	Meta struct {
+		HostVars map[string]map[string]string `json:"hostvars"`
+	} `json:"_meta"`
+}
+
+// printHelp just prints a formatted help.
 func printHelp() {
 	fmt.Println(`Usage:
     ansible-hcloud-inventory [option]
@@ -23,6 +34,40 @@ func printHelp() {
     --list    shows all groups including variables as JSON structure
     --host [hostname]    shows all variables for one host as JSON structure`)
 	os.Exit(1)
+}
+
+// list lists all servers including metadata
+func (inv *inventory) list(token string) {
+	client := hcloud.NewClient(hcloud.WithToken(token))
+	servers, _ := client.Server.All(context.Background())
+	for _, server := range servers {
+		hostName := server.PublicNet.IPv4.DNSPtr
+		inv.Meta.HostVars = make(map[string]map[string]string)
+		inv.Meta.HostVars[hostName] = map[string]string{}
+		for k, v := range server.Labels {
+			inv.Meta.HostVars[hostName][k] = v
+		}
+	}
+	output, err := json.MarshalIndent(inv, "", "    ")
+	if err != nil {
+		log.Println("Couldn't marshal inventory")
+	}
+	fmt.Println(string(output))
+}
+
+// host prints all labels for a given hostName (This has to be a RDNS pointer)
+func host(token string, hostName string) {
+	client := hcloud.NewClient(hcloud.WithToken(token))
+	servers, _ := client.Server.All(context.Background())
+	for _, server := range servers {
+		if hostName == server.PublicNet.IPv4.DNSPtr {
+			output, err := json.MarshalIndent(server.Labels, "", "    ")
+			if err != nil {
+				log.Fatal("Couldn't marshal label list")
+			}
+			fmt.Println(string(output))
+		}
+	}
 }
 
 func main() {
@@ -44,12 +89,6 @@ func main() {
 		token = config.Token
 	}
 
-	// TODO: implement list and host functions
-	client := hcloud.NewClient(hcloud.WithToken(token))
-	servers, _ := client.Server.All(context.Background())
-	for _, server := range servers {
-		fmt.Println(server.Name)
-	}
 	// TODO: better flag handling
 	args := os.Args
 	if len(args) < 2 {
@@ -57,13 +96,13 @@ func main() {
 	}
 	switch args[1] {
 	case "--list":
-		fmt.Println("list")
-		// TODO: get list
+		inv := inventory{}
+		inv.list(token)
 	case "--host":
 		if len(args) != 3 {
 			printHelp()
 		}
-		// TODO: get host variables
+		host(token, args[2])
 	default:
 		printHelp()
 	}
