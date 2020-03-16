@@ -22,7 +22,7 @@ type configuration struct {
 // https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html#id16
 type inventory struct {
 	Meta struct {
-		HostVars map[string]map[string]string `json:"hostvars"`
+		HostVars map[string]map[string]interface{} `json:"hostvars"`
 	} `json:"_meta"`
 }
 
@@ -42,8 +42,8 @@ func (inv *inventory) list(token string) {
 	servers, _ := client.Server.All(context.Background())
 	for _, server := range servers {
 		hostName := server.PublicNet.IPv4.DNSPtr
-		inv.Meta.HostVars = make(map[string]map[string]string)
-		inv.Meta.HostVars[hostName] = map[string]string{}
+		inv.Meta.HostVars = make(map[string]map[string]interface{})
+		inv.Meta.HostVars[hostName] = make(map[string]interface{})
 		for k, v := range server.Labels {
 			inv.Meta.HostVars[hostName][k] = v
 		}
