@@ -2,7 +2,6 @@
 A hcloud inventory for Ansible written in Go
 
 ## How to use it
-
 ## Differences to existing solutions
 
 ### https://github.com/thannaske/hcloud-ansible-inv

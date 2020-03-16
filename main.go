@@ -27,6 +27,15 @@ type inventory struct {
 	All struct {
 		Children []string `json:"children"`
 	} `json:"all"`
+	NBG1 struct {
+		Hosts []string `json:"hosts"`
+	} `json:"nbg1"`
+	HEL1 struct {
+		Hosts []string `json:"hosts"`
+	} `json:"hel1"`
+	FSN1 struct {
+		Hosts []string `json:"hosts"`
+	} `json:"fsn1"`
 	Ungrouped struct {
 		Hosts []string `json:"hosts"`
 	}
@@ -46,6 +55,8 @@ func printHelp() {
 func (inv *inventory) list(token string) {
 	client := hcloud.NewClient(hcloud.WithToken(token))
 	servers, _ := client.Server.All(context.Background())
+	// initialize All group
+	inv.All.Children = []string{"nbg1", "hel1", "fsn1", "ungrouped"}
 	for _, server := range servers {
 		hostName := server.PublicNet.IPv4.DNSPtr
 		inv.Meta.HostVars = make(map[string]map[string]interface{})
@@ -53,8 +64,16 @@ func (inv *inventory) list(token string) {
 		for k, v := range server.Labels {
 			inv.Meta.HostVars[hostName][k] = v
 		}
-		inv.All.Children = append(inv.All.Children, "ungrouped")
-		inv.Ungrouped.Hosts = append(inv.Ungrouped.Hosts, hostName)
+		switch server.Datacenter.Location.Name {
+		case "nbg1":
+			inv.NBG1.Hosts = append(inv.NBG1.Hosts, hostName)
+		case "hel1":
+			inv.HEL1.Hosts = append(inv.HEL1.Hosts, hostName)
+		case "fsn1":
+			inv.FSN1.Hosts = append(inv.FSN1.Hosts, hostName)
+		default:
+			inv.Ungrouped.Hosts = append(inv.Ungrouped.Hosts, hostName)
+		}
 	}
 	output, err := json.MarshalIndent(inv, "", "    ")
 	if err != nil {
