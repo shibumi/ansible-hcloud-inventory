@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"os"
@@ -103,6 +104,34 @@ func (inv *inventory) host(hostName string) {
 	}
 }
 
+// generateIni generates an INI Ansible inventory and prints it to stdout
+func (inv *inventory) generateIni() {
+	t := template.New("inventory")
+	t, err := t.Parse(`# This file has been generated via github.com/shibumi/ansible-hcloud-inventory
+{{ range .Ungrouped.Hosts -}}
+{{.}}
+{{end}}
+[nbg1]
+{{ range .NBG1.Hosts -}}
+{{.}}
+{{end}}
+[hel1]
+{{ range .HEL1.Hosts -}}
+{{.}}
+{{end}}
+[fsn1]
+{{ range .FSN1.Hosts -}}
+{{.}}
+{{end}}
+`)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if err = t.Execute(os.Stdout, inv); err != nil {
+		log.Fatalln(err)
+	}
+}
+
 func main() {
 	// Try to read token from environment variable HETZNER_CLOUD_KEY otherwise use a config file
 	token := os.Getenv("HETZNER_CLOUD_KEY")
@@ -139,6 +168,8 @@ func main() {
 	switch args[1] {
 	case "--list":
 		inv.list()
+	case "--ini":
+		inv.generateIni()
 	case "--host":
 		if len(args) != 3 {
 			printHelp()
