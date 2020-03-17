@@ -9,6 +9,14 @@ A hcloud inventory for Ansible written in Go
 * Generate an ini file out of your inventory
 * The generated ini file will have additional labels
 
+## Groups
+ansible-hcloud-inventory is grouping your hosts in the following groups:
+
+| Group | Description |
+| ---  | ---       |
+| nbg1 | All servers running in location NBG1 |
+| fsn1 | All servers running in location FSN1 |
+| hel1 | All servers running in location HEL1 |
 
 ## How to use it
 
@@ -73,14 +81,20 @@ For using your favourite command for retrieving the password automatically:
 
 ### https://github.com/thannaske/hcloud-ansible-inv
 
-* hcloud-ansible-inv doesn't let you specify labels
-* hcloud-ansible-inv doesn't have an additional host parameter
-* hcloud-ansible-inv is not grouping your servers via location
+* doesn't let you specify labels
+* doesn't have an additional host parameter
+* is not grouping your servers via location
+* can't generate an ini file for you
 
 ### https://github.com/thetechnick/hcloud-ansible
 
-* thetechnick/hcloud-ansible is no longer maintained.
+* is no longer maintained.
+* can't generate an ini file for you
+* doesn't have an additional host parameter
 
 ### https://github.com/hg8496/ansible-hcloud-inventory
 
-* hg8496/ansible-hcloud-inventory is written in Python
+* is written in Python
+* can't generate an ini file for you
+* doesn't have an additional host parameter
+* doesn't support all locations (according to their README)
