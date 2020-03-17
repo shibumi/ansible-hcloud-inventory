@@ -79,7 +79,7 @@ func (inv *inventory) list(token string) {
 	}
 	output, err := json.MarshalIndent(inv, "", "    ")
 	if err != nil {
-		log.Println("Couldn't marshal inventory")
+		log.Fatalln(err)
 	}
 	fmt.Println(string(output))
 }
@@ -92,7 +92,7 @@ func host(token string, hostName string) {
 		if hostName == server.PublicNet.IPv4.DNSPtr {
 			output, err := json.MarshalIndent(server.Labels, "", "    ")
 			if err != nil {
-				log.Fatal("Couldn't marshal label list")
+				log.Fatalln(err)
 			}
 			fmt.Println(string(output))
 		}
