@@ -41,7 +41,7 @@ type inventory struct {
 	} `json:"fsn1"`
 	Ungrouped struct {
 		Hosts []string `json:"hosts"`
-	}
+	} `json:"ungrouped"`
 }
 
 // printHelp just prints a formatted help.
@@ -62,6 +62,10 @@ func newInventory(token string) *inventory {
 	// initialize All group
 	inv.All.Children = []string{"nbg1", "hel1", "fsn1", "ungrouped"}
 	inv.Meta.HostVars = make(map[string]map[string]interface{})
+	inv.NBG1.Hosts = []string{}
+	inv.FSN1.Hosts = []string{}
+	inv.HEL1.Hosts = []string{}
+	inv.Ungrouped.Hosts = []string{}
 	for _, server := range servers {
 		hostName := server.PublicNet.IPv4.DNSPtr
 		inv.Meta.HostVars[hostName] = make(map[string]interface{})
