@@ -53,8 +53,9 @@ func printHelp() {
 	os.Exit(1)
 }
 
-// list lists all servers including metadata
-func (inv *inventory) list(token string) {
+// newInventory generates a new Hcloud Ansible inventory
+func newInventory(token string) *inventory {
+	inv := inventory{}
 	client := hcloud.NewClient(hcloud.WithToken(token))
 	servers, _ := client.Server.All(context.Background())
 	// initialize All group
@@ -77,6 +78,11 @@ func (inv *inventory) list(token string) {
 			inv.Ungrouped.Hosts = append(inv.Ungrouped.Hosts, hostName)
 		}
 	}
+	return &inv
+}
+
+// list lists all servers including metadata
+func (inv *inventory) list() {
 	output, err := json.MarshalIndent(inv, "", "    ")
 	if err != nil {
 		log.Fatalln(err)
@@ -85,12 +91,10 @@ func (inv *inventory) list(token string) {
 }
 
 // host prints all labels for a given hostName (This has to be a RDNS pointer)
-func host(token string, hostName string) {
-	client := hcloud.NewClient(hcloud.WithToken(token))
-	servers, _ := client.Server.All(context.Background())
-	for _, server := range servers {
-		if hostName == server.PublicNet.IPv4.DNSPtr {
-			output, err := json.MarshalIndent(server.Labels, "", "    ")
+func (inv *inventory) host(hostName string) {
+	for k, v := range inv.Meta.HostVars {
+		if hostName == k {
+			output, err := json.MarshalIndent(v, "", "    ")
 			if err != nil {
 				log.Fatalln(err)
 			}
@@ -133,13 +137,14 @@ func main() {
 	}
 	switch args[1] {
 	case "--list":
-		inv := inventory{}
-		inv.list(token)
+		inv := newInventory(token)
+		inv.list()
 	case "--host":
 		if len(args) != 3 {
 			printHelp()
 		}
-		host(token, args[2])
+		inv := newInventory(token)
+		inv.host(args[2])
 	default:
 		printHelp()
 	}
