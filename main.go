@@ -135,15 +135,14 @@ func main() {
 	if len(args) < 2 {
 		printHelp()
 	}
+	inv := newInventory(token)
 	switch args[1] {
 	case "--list":
-		inv := newInventory(token)
 		inv.list()
 	case "--host":
 		if len(args) != 3 {
 			printHelp()
 		}
-		inv := newInventory(token)
 		inv.host(args[2])
 	default:
 		printHelp()
