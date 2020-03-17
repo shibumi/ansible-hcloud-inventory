@@ -61,9 +61,9 @@ func newInventory(token string) *inventory {
 	servers, _ := client.Server.All(context.Background())
 	// initialize All group
 	inv.All.Children = []string{"nbg1", "hel1", "fsn1", "ungrouped"}
+	inv.Meta.HostVars = make(map[string]map[string]interface{})
 	for _, server := range servers {
 		hostName := server.PublicNet.IPv4.DNSPtr
-		inv.Meta.HostVars = make(map[string]map[string]interface{})
 		inv.Meta.HostVars[hostName] = make(map[string]interface{})
 		for k, v := range server.Labels {
 			inv.Meta.HostVars[hostName][k] = v
