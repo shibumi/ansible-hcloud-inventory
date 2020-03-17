@@ -30,6 +30,20 @@ You need to do the following things to use this project:
 * Make sure to set your go path accordingly: `export GOBIN=$GOPATH/bin`
 * Create a config file or pass the API token via environment variable. For examples scroll down.
 
+If you don't have Go installed on your computer, you can download releases
+for Windows, Linux, Mac OSX (all AMD64) via the release page.
+All releases are signed with my GPG key:
+
+```
+6DAF7B808F9DF25139620000D21461E3DFE2060D
+```
+
+You can get the key via:
+
+```sh
+$ gpg --locate chris@shibumi.dev
+```
+
 ### Dynamic Ansible inventory
 
 For using this project as your dynamic ansible inventory do the
