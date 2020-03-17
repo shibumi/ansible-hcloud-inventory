@@ -26,6 +26,8 @@ You need to do the following things to use this project:
 
 * configure a valid reverse DNS entry for every server
 * create a configuration file or pass the API token via environment variable
+* Install the ansible-hcloud-inventory via `go install https://github.com/shibumi/ansible-hcloud-inventory`
+* Make sure to set your go path accordingly: `export GOBIN=$GOPATH/bin`
 
 ### Dynamic Ansible inventory
 
