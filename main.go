@@ -15,7 +15,6 @@ import (
 )
 
 // configuration just holds a Token at the moment.
-// TODO: Gain token via any command. For example: `gopass api/hcloud`
 type configuration struct {
 	Command string `json:"command"`
 	Token   string `json:"token"`
@@ -128,7 +127,6 @@ func main() {
 		}
 	}
 
-	// TODO: better flag handling
 	args := os.Args
 	if len(args) < 2 {
 		printHelp()
