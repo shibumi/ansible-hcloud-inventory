@@ -112,20 +112,21 @@ func (inv *inventory) host(hostName string) {
 func (inv *inventory) generateIni() {
 	t := template.New("inventory")
 	t, err := t.Parse(`# This file has been generated via github.com/shibumi/ansible-hcloud-inventory
-{{ range .Ungrouped.Hosts -}}
-{{.}}
+{{- $hostVars := .Meta.HostVars -}}
+{{ range $server := .Ungrouped.Hosts -}}
+{{$server}} {{ $index := index $hostVars $server}}{{ range $key, $value := $index}} {{$key}}={{$value}}{{end}}
 {{end}}
 [nbg1]
-{{ range .NBG1.Hosts -}}
-{{.}}
+{{ range $server := .NBG1.Hosts -}}
+{{$server}} {{ $index := index $hostVars $server}}{{ range $key, $value := $index}} {{$key}}={{$value}}{{end}}
 {{end}}
 [hel1]
-{{ range .HEL1.Hosts -}}
-{{.}}
+{{ range $server := .HEL1.Hosts -}}
+{{$server}} {{ $index := index $hostVars $server}}{{ range $key, $value := $index}} {{$key}}={{$value}}{{end}}
 {{end}}
 [fsn1]
-{{ range .FSN1.Hosts -}}
-{{.}}
+{{ range $server := .FSN1.Hosts -}}
+{{$server}} {{ $index := index $hostVars $server}}{{ range $key, $value := $index}} {{$key}}={{$value}}{{end}}
 {{end}}
 `)
 	if err != nil {
