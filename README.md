@@ -20,7 +20,7 @@ ansible-hcloud-inventory is grouping your hosts in the following groups:
 
 ## How to use it
 
-### First preparations
+### Installation and usage
 
 You need to do the following things to use this project:
 
@@ -28,6 +28,7 @@ You need to do the following things to use this project:
 * create a configuration file or pass the API token via environment variable
 * Install the ansible-hcloud-inventory via `go install https://github.com/shibumi/ansible-hcloud-inventory`
 * Make sure to set your go path accordingly: `export GOBIN=$GOPATH/bin`
+* Create a config file or pass the API token via environment variable. For examples scroll down.
 
 ### Dynamic Ansible inventory
 
