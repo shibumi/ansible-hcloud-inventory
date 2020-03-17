@@ -1,0 +1,4 @@
+github.com/adrg/xdg v0.2.1 h1:VSVdnH7cQ7V+B33qSJHTCRlNgra1607Q8PzEmnvb2Ic=
+github.com/adrg/xdg v0.2.1/go.mod h1:ZuOshBmzV4Ta+s23hdfFZnBsdzmoR3US0d7ErpqSbTQ=
+github.com/hetznercloud/hcloud-go v1.17.0 h1:IKH0GLLoTEfgMuBY+GaaVTwjYChecrHFVo4/t0sIkGU=
+github.com/hetznercloud/hcloud-go v1.17.0/go.mod h1:8lR3yHBHZWy2uGcUi9Ibt4UOoop2wrVdERJgCtxsF3Q=
