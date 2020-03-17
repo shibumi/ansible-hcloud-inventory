@@ -1,6 +1,15 @@
 # ansible-hcloud-inventory
 A hcloud inventory for Ansible written in Go
 
+## Features
+
+* Pass the API token via environment variable
+* Pass the API token via config file
+* Pass the API token via subcommand call (pass, gopass, etc)
+* Generate an ini file out of your inventory
+* The generated ini file will have additional labels
+
+
 ## How to use it
 
 ### First preparations
@@ -25,6 +34,7 @@ $ ansible -i ansible-hcloud-inventory all -m ping
 
 * `--list` for listing all hosts including variables
 * `--host <hostname>` for just listing all labels for a given hostname
+* `--ini` for generating an INI inventory file and printing it to stdout
 
 ### Config file examples
 
